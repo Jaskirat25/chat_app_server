@@ -5,12 +5,22 @@ import { Server } from "socket.io";
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://chat-app-next-25.vercel.app",
+  "https://chat-app-next-25-git-master-jaskirat-singhs-projects-69da70b7.vercel.app",
+  "https://chat-app-next-25-ck0buk821-jaskirat-singhs-projects-69da70b7.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://chat-app-next-25.vercel.app"
-    ],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -23,7 +33,9 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:3000",
-      "https://chat-app-next-25.vercel.app"
+      "https://chat-app-next-25.vercel.app",
+      "https://chat-app-next-25-git-master-jaskirat-singhs-projects-69da70b7.vercel.app",
+  "https://chat-app-next-25-ck0buk821-jaskirat-singhs-projects-69da70b7.vercel.app",
     ],
     credentials: true,
   },
