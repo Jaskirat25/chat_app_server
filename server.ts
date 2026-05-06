@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import handleIoConnection from "./socket/index.js";
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use(
       }
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -35,11 +36,13 @@ const io = new Server(server, {
       "http://localhost:3000",
       "https://chat-app-next-25.vercel.app",
       "https://chat-app-next-25-git-master-jaskirat-singhs-projects-69da70b7.vercel.app",
-  "https://chat-app-next-25-ck0buk821-jaskirat-singhs-projects-69da70b7.vercel.app",
+      "https://chat-app-next-25-ck0buk821-jaskirat-singhs-projects-69da70b7.vercel.app",
     ],
     credentials: true,
   },
 });
+
+handleIoConnection(io);
 
 const PORT = process.env.PORT || 3001;
 
