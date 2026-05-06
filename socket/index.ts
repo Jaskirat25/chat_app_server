@@ -26,7 +26,7 @@ function getOnlineUsers() {
 export default function handleIoConnection(io: Server) {
   io.on("connection", (socket: Socket) => {
     const userId = socket.handshake.auth?.token;
-    console.log("socket connected with id", socket.id, "userId", userId);
+    console.log("socket connected with", socket.id, "userId", userId);
     if (!userId) {
       socket.disconnect();
       return;
