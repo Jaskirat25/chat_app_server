@@ -11,6 +11,7 @@ const io = new Server(server, {
       "http://localhost:3000",
       "http://127.0.0.1:3000",
       "https://chat-app-next-25.vercel.app/",
+      "https://chat-app-next-25-git-master-jaskirat-singhs-projects-69da70b7.vercel.app/"
     ],
     methods: ["GET", "POST"],
     credentials: true,
