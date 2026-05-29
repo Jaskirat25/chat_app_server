@@ -38,7 +38,15 @@ export default function handleIoConnection(io: Server) {
     socket.emit("presence-init", getOnlineUsers());
     io.emit("presence-update", getOnlineUsers());
 
+    socket.on("join-conversation", ({ conversationId }) => {
+      if (!conversationId) return;
+      const roomName = `conversation:${conversationId}`;
+      socket.join(roomName);
+      socket.emit("joined-conversation", { conversationId });
+    });
+
     socket.on("send-message", ({ message, receiverId }) => {
+      if (!receiverId) return;
       io.to(String(receiverId)).emit("receive-message", {
         ...message,
         from: userId,
@@ -50,20 +58,31 @@ export default function handleIoConnection(io: Server) {
     });
 
     socket.on("typing", ({ receiverId }) => {
+      if (!receiverId) return;
       io.to(String(receiverId)).emit("typing", {
         from: userId,
       });
     });
 
+    socket.on("stop-typing", ({ receiverId }) => {
+      if (!receiverId) return;
+      io.to(String(receiverId)).emit("stop-typing", {
+        from: userId,
+      });
+    });
+
     socket.on("message-read", ({ receiverId }) => {
+      if (!receiverId) return;
       io.to(String(receiverId)).emit("message-read", {
         from: userId,
       });
     });
 
+    const appBaseUrl = process.env.APP_URL || "http://localhost:3000";
     async function updateLastSeenForUser() {
+      if (!userId) return;
       try {
-        await fetch("http://localhost:3000/api/Users/updateLastSeen", {
+        await fetch(`${appBaseUrl}/api/Users/updateLastSeen`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId }),
